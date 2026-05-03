@@ -1,0 +1,32 @@
+# Core
+aiogram==3.7.0
+python-dotenv==1.0.1
+
+# Database (SQLite by default, PostgreSQL optional)
+sqlalchemy==2.0.30
+aiosqlite==0.20.0
+asyncpg==0.29.0
+alembic==1.13.1
+
+# Redis (optional — used for FSM storage if available)
+redis==5.0.4
+
+# Timezone
+pytz==2024.1
+tzlocal==5.2
+
+# Scheduler
+apscheduler==3.10.4
+
+# Logging
+loguru==0.7.2
+
+# Validation
+phonenumbers==8.13.37
+
+# HTTP (webhook support)
+aiohttp==3.9.5
+
+# Testing (optional)
+pytest==8.2.0
+pytest-asyncio==0.23.7

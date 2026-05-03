@@ -1,0 +1,55 @@
+version: "3.9"
+
+services:
+  bot:
+    build: .
+    container_name: pochta_bot
+    restart: unless-stopped
+    env_file: .env
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - botnet
+
+  db:
+    image: postgres:15-alpine
+    container_name: pochta_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: pochta_bot
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-secret}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - botnet
+
+  redis:
+    image: redis:7-alpine
+    container_name: pochta_redis
+    restart: unless-stopped
+    command: redis-server --maxmemory 128mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - botnet
+
+volumes:
+  pgdata:
+
+networks:
+  botnet:
+    driver: bridge
